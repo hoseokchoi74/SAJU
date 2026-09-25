@@ -213,7 +213,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.35; mar
 .cal-day.luck-best { background: var(--gold-soft); border-color: var(--gold); }
 .cal-day.luck-caution .rk-s { color: var(--ink-faint); }
 .cal-day.sel { outline: 2px solid var(--ink); outline-offset: -1px; }
-.cal-day.today::after { content: '今日'; position: absolute; top: -7px; right: -2px; font-size: 9px; background: var(--shu); color: #fff; border-radius: 4px; padding: 0 4px; line-height: 1.6; }
+.cal-day.today::after { content: attr(data-today); position: absolute; top: -7px; right: -2px; font-size: 9px; background: var(--shu); color: #fff; border-radius: 4px; padding: 0 4px; line-height: 1.6; }
 .marks { position: absolute; bottom: 5px; display: flex; gap: 3px; }
 .marks i, .legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
 .m-tensha { background: var(--shu); }
@@ -302,3 +302,14 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.35; mar
   .rk-s { font-size: 10px; }
   .line-inner { flex-direction: column; text-align: center; }
 }
+
+/* ---------- 検討用 言語切り替え ---------- */
+.lang-toggle {
+  position: fixed; right: 16px; bottom: 16px; z-index: 50;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px 10px 10px; border: 0; border-radius: 999px;
+  background: var(--ink); color: #fff; font-size: 14px; font-weight: 700;
+  box-shadow: 0 6px 20px rgba(30, 41, 68, 0.3); cursor: pointer;
+}
+.lang-tag { background: var(--shu); border-radius: 999px; padding: 2px 8px; font-size: 11px; letter-spacing: 0.05em; }
+:lang(ko) body, html[lang='ko'] body { word-break: keep-all; }
