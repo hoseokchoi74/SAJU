@@ -14,13 +14,16 @@ export function Ranking({ today }: { today: DayInfo }) {
   const target = months[tab]
   const data = useMemo(() => getZodiacMonthly(target.year, target.month), [target])
   const ranked = [...data.list].sort((a, b) => a.rank - b.rank)
+  // モバイルでは4位以下を折りたたみ、タップで開く
+  const [open, setOpen] = useState<number[]>([])
+  const toggle = (b: number) => setOpen((o) => (o.includes(b) ? o.filter((x) => x !== b) : [...o, b]))
 
   return (
     <section className="section" id="ranking">
       <div className="wrap">
         <p className="eyebrow center">MONTHLY FORTUNE</p>
         <h2 className="section-title">
-          {target.year}年{target.month}月 干支別運勢ランキング
+          <span className="nb">{target.year}年{target.month}月</span> <span className="nb">干支別運勢ランキング</span>
         </h2>
         <p className="section-sub">
           今月の干支は<b>{data.monthPillar}</b>。あなたの生まれ年の干支との相性で、ひと月の流れを読み解きます。
@@ -38,26 +41,32 @@ export function Ranking({ today }: { today: DayInfo }) {
             const zd = ZODIAC[z.branch]
             const t = RELATION_TEXT[z.relation]
             const lucky = ELEMENT_LUCK[z.luckyElement]
+            const fold = z.rank > 3
+            const isOpen = open.includes(z.branch)
+            const cls = ['rank-card', z.rank <= 3 ? `top top${z.rank}` : '', fold ? 'fold' : '', isOpen ? 'open' : '']
             return (
-              <li key={z.branch} className={z.rank <= 3 ? `rank-card top top${z.rank}` : 'rank-card'}>
-                <div className="rank-head">
+              <li key={z.branch} className={cls.join(' ')}>
+                <button type="button" className="rank-head" onClick={() => fold && toggle(z.branch)} aria-expanded={fold ? isOpen : undefined}>
                   <span className="rank-no">{z.rank}<small>位</small></span>
                   <span className="zodiac-seal">{zd.kanji}</span>
-                  <div className="rank-name">
+                  <span className="rank-name">
                     <b>{zd.kanji}({zd.yomi})年</b>
                     <small>{birthYears(z.branch).slice(0, 4).join('・')}年生まれ</small>
-                  </div>
+                  </span>
                   <span className="stars" aria-label={`5つ星中${z.stars}`}>{stars(z.stars)}</span>
-                </div>
+                  {fold && <span className="chev" aria-hidden />}
+                </button>
                 <p className="rank-title">{t.title}</p>
-                <p className="rank-line"><b className="ok">開運</b>{t.action}</p>
-                <p className="rank-line"><b className="ng">注意</b>{t.caution}</p>
-                <p className="lucky">
-                  <span className="dot" style={{ background: lucky.color }} />
-                  ラッキーカラー {lucky.colorName}
-                  <span className="sep">／</span>
-                  方位 {lucky.direction}
-                </p>
+                <div className="rank-body">
+                  <p className="rank-line"><b className="ok">開運</b>{t.action}</p>
+                  <p className="rank-line"><b className="ng">注意</b>{t.caution}</p>
+                  <p className="lucky">
+                    <span className="dot" style={{ background: lucky.color }} />
+                    ラッキーカラー {lucky.colorName}
+                    <span className="sep">／</span>
+                    方位 {lucky.direction}
+                  </p>
+                </div>
               </li>
             )
           })}
