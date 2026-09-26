@@ -301,6 +301,49 @@ function peachBlossom(b: number): number {
   return 0 // 亥卯未 → 子
 }
 
+export interface CategoryDays {
+  good: number[]
+  caution: number[]
+}
+
+/**
+ * 運勢別の良い日・注意日。日の干支を日干から見た十神と、日支との関係で各日の点数を出し、
+ * 上位3日を良い日、下位2日を注意日にする。六曜・選日で少し補正する。
+ */
+function categoryDays(p: Pillars, days: DayInfo[]): Record<Category, CategoryDays> {
+  const dayBranch = BRANCHES.indexOf(p.day[1])
+  const peach = [peachBlossom(dayBranch), peachBlossom(BRANCHES.indexOf(p.year[1]))]
+  const scored = days.map((d) => {
+    const b = BRANCHES.indexOf(d.dayPillar[1])
+    const s: Effect = [0, 0, 0, 0, 0]
+    GOD_EFFECT[tenGod(p.dayMaster, d.dayPillar[0])].forEach((v, i) => (s[i] += v))
+    GOD_EFFECT[tenGod(p.dayMaster, MAIN_STEM[b])].forEach((v, i) => (s[i] += v * 0.5))
+    DAY_BRANCH_EFFECT[branchRelation(dayBranch, b)]?.forEach((v, i) => (s[i] += v))
+    const common = d.rokuyo === '大安' ? 0.3 : d.rokuyo === '仏滅' ? -0.3 : 0
+    s.forEach((_, i) => (s[i] += common + (d.senjitsu.includes('天赦日') ? 0.5 : 0)))
+    const moneyDays: Senjitsu[] = ['一粒万倍日', '寅の日', '巳の日', '己巳の日']
+    if (d.senjitsu.some((x) => moneyDays.includes(x))) s[0] += 1
+    if (peach.includes(b)) s[1] += 1
+    if (d.rokuyo === '友引') { s[1] += 0.3; s[4] += 0.3 }
+    if (d.rokuyo === '先勝') s[2] += 0.3
+    return { day: d.day, s }
+  })
+
+  return Object.fromEntries(
+    CATEGORIES.map((c, i) => {
+      const byScore = [...scored].sort((a, b) => b.s[i] - a.s[i] || a.day - b.day)
+      const good = byScore.slice(0, 3).map((x) => x.day)
+      const caution = [...byScore]
+        .reverse()
+        .filter((x) => !good.includes(x.day))
+        .slice(0, 2)
+        .map((x) => x.day)
+      const asc = (a: number, b: number) => a - b
+      return [c, { good: good.sort(asc), caution: caution.sort(asc) }]
+    }),
+  ) as Record<Category, CategoryDays>
+}
+
 export interface PersonalMonthly {
   year: number
   month: number
@@ -308,6 +351,8 @@ export interface PersonalMonthly {
   theme: TenGod
   luckyDays: number[]
   cautionDays: number[]
+  /** 運勢別の良い日・注意日 */
+  days: Record<Category, CategoryDays>
   overall: number
   scores: Record<Category, number>
   counts: Record<Element, number>
@@ -354,6 +399,7 @@ export function getPersonalMonthly(p: Pillars, year: number, month: number, from
   return {
     year, month, monthPillar, theme,
     luckyDays: lucky, cautionDays: caution,
+    days: categoryDays(p, days),
     overall, scores, counts, strong, weakElement, luckyElement,
   }
 }

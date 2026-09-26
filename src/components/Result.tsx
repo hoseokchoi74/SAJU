@@ -86,6 +86,10 @@ export function Result({ p, month }: { p: Pillars; month: PersonalMonthly }) {
               <span className="stars" aria-label={`${month.scores[c]}/5`}>{stars(month.scores[c])}</span>
             </div>
             <p>{bk.category(c, month.scores[c], seed + i)}</p>
+            <p className="days">
+              <span><b className="ok">{t('良い日', '좋은 날')}</b>{fmtDays(month.month, month.days[c].good)}</span>
+              <span><b className="ng">{t('注意日', '주의할 날')}</b>{fmtDays(month.month, month.days[c].caution)}</span>
+            </p>
             {c === 'health' && (
               <p className="care">
                 <b>{t('ケアポイント', '케어 포인트')}</b>
