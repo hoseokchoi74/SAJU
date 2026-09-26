@@ -15,7 +15,7 @@ export const ZODIAC = [
   { kanji: '申', yomi: 'さる', animal: 'さる', ko: '원숭이띠' },
   { kanji: '酉', yomi: 'とり', animal: 'とり', ko: '닭띠' },
   { kanji: '戌', yomi: 'いぬ', animal: 'いぬ', ko: '개띠' },
-  { kanji: '亥', yomi: 'い', animal: 'いのしし', ko: '돼지띠' },
+  { kanji: '亥', yomi: 'い', animal: 'いのしし', ko: '멧돼지띠' },
 ]
 
 /** 日付リストを「10/14・10/26」形式に */

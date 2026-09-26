@@ -62,7 +62,10 @@ export function Ranking({ today }: { today: DayInfo }) {
                   <span className="rank-no">{z.rank}<small>{t('位', '위')}</small></span>
                   <span className="zodiac-seal">{zd.kanji}</span>
                   <span className="rank-name">
-                    <b>{t(`${zd.kanji}(${zd.yomi})年`, `${zd.ko}(${zd.kanji})`)}</b>
+                    <b>
+                      {t(`${zd.kanji}(${zd.yomi})年`, `${zd.ko}(${zd.kanji})`)}
+                      {lang === 'ja' && zd.animal !== zd.yomi && <span className="animal">{zd.animal}</span>}
+                    </b>
                     <small>{birthYears(z.branch).slice(0, 4).join('・')}{t('年生まれ', '년생')}</small>
                   </span>
                   <span className="stars" aria-label={`${z.stars}/5`}>{stars(z.stars)}</span>

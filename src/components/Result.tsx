@@ -44,7 +44,7 @@ export function Result({ p, month }: { p: Pillars; month: PersonalMonthly }) {
         </p>
         <p>{dm.nature}</p>
         <p className="res-sub">
-          {t(`日干: ${p.dayMaster}・${zodiac.kanji}年生まれ`, `일간: ${p.dayMaster} · ${zodiac.ko}`)}
+          {t(`日干: ${p.dayMaster}・${zodiac.kanji}年(${zodiac.animal})生まれ`, `일간: ${p.dayMaster} · ${zodiac.ko}`)}
         </p>
         <div className="gogyo">
           <p className="gogyo-title">
