@@ -111,7 +111,7 @@ const ROKUYO_TEXT: RokuyoText = {
   先勝: { yomi: 'せんしょう', short: '午前が吉、午後は凶', good: '急ぎの用事は午前中に', avoid: '午後からの大事な約束' },
   友引: { yomi: 'ともびき', short: '朝夕は吉、昼は凶', good: '結婚式・友人とのお出かけ', avoid: '弔事' },
   先負: { yomi: 'せんぶ', short: '午前は凶、午後が吉', good: '静かに過ごし、用事は午後に', avoid: '勝負ごと・急な決断' },
-  仏滅: { yomi: 'ぶつめつ', short: '万事に凶とされる日', good: '掃除・断捨離・物事の区切り', avoid: 'お祝いごと・新規の契約' },
+  仏滅: { yomi: 'ぶつめつ', short: '区切り・リセットに向く日', good: '掃除・断捨離・物事の区切り', avoid: 'お祝いごと・新規の契約' },
 }
 
 const ROKUYO_TEXT_KO: RokuyoText = {
@@ -120,7 +120,7 @@ const ROKUYO_TEXT_KO: RokuyoText = {
   先勝: { yomi: '선승', short: '오전은 길, 오후는 흉', good: '급한 용무는 오전 중에', avoid: '오후의 중요한 약속' },
   友引: { yomi: '우인', short: '아침·저녁은 길, 낮은 흉', good: '결혼식·친구와의 외출', avoid: '장례 등 흉사' },
   先負: { yomi: '선부', short: '오전은 흉, 오후가 길', good: '조용히 보내고 용무는 오후에', avoid: '승부·급한 결정' },
-  仏滅: { yomi: '불멸', short: '만사에 흉하다고 여겨지는 날', good: '청소·물건 정리·일 매듭짓기', avoid: '축하할 일·새 계약' },
+  仏滅: { yomi: '불멸', short: '매듭짓기·리셋에 좋은 날', good: '청소·물건 정리·일 매듭짓기', avoid: '축하할 일·새 계약' },
 }
 
 const SENJITSU_TEXT: Record<Senjitsu, string> = {

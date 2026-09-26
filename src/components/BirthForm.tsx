@@ -98,12 +98,12 @@ export function BirthForm() {
           </div>
           {lang === 'ko' ? (
             <p>
-              당신의 본명은 <b style={{ color: ELEMENT_LUCK[result.dayMasterElement].color }}>{dm.yomi}({result.dayMaster})</b>.{' '}
+              당신의 일간은 <b style={{ color: ELEMENT_LUCK[result.dayMasterElement].color }}>{dm.yomi}({result.dayMaster})</b>.{' '}
               {dm.image} 같은 사람. {zodiac.ko}입니다.
             </p>
           ) : (
             <p>
-              あなたの本命は <b style={{ color: ELEMENT_LUCK[result.dayMasterElement].color }}>{result.dayMaster}({dm.yomi})</b>。
+              あなたの日干(にっかん)は <b style={{ color: ELEMENT_LUCK[result.dayMasterElement].color }}>{result.dayMaster}({dm.yomi})</b>。
               {dm.image}のような人。{zodiac.kanji}年生まれです。
             </p>
           )}
