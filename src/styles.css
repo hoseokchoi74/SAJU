@@ -335,3 +335,32 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.35; mar
 .res-head b { font-size: 22px; }
 .res-sub { font-size: 12px; color: var(--ink-faint); }
 .res-block.theme { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+
+/* ---------- 個人結果: 五行バランス・運勢別・ラッキー ---------- */
+.gogyo { margin-top: 10px; background: var(--paper); border-radius: 10px; padding: 10px 12px; }
+.gogyo-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12px; font-weight: 700; margin: 0 0 6px !important; }
+.gogyo-title small { font-weight: 400; color: var(--ink-soft); font-size: 11px; }
+.gogyo-row { display: grid; grid-template-columns: 20px 1fr 16px; align-items: center; gap: 8px; font-size: 12px; margin: 3px 0; }
+.gogyo-name { font-family: var(--serif); font-weight: 700; }
+.gogyo-bar { height: 8px; background: var(--paper-2); border-radius: 999px; overflow: hidden; }
+.gogyo-bar i { display: block; height: 100%; border-radius: 999px; min-width: 2px; }
+.gogyo-n { text-align: right; color: var(--ink-soft); }
+.res-label .stars { margin-left: auto; font-size: 13px; letter-spacing: 1px; }
+.cat-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+.cat { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--card); }
+.cat p { margin: 4px 0 0; font-size: 13.5px; }
+.cat-head { display: flex; justify-content: space-between; align-items: center; }
+.cat-head b { font-family: var(--serif); font-size: 15px; display: flex; align-items: center; gap: 6px; }
+.cat-head b::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.cat-money { --c: var(--gold); }
+.cat-love { --c: #c2456f; }
+.cat-work { --c: #2f5aa8; }
+.cat-health { --c: var(--green); }
+.cat-social { --c: var(--shu); }
+.cat-head .stars { font-size: 13px; }
+.care { display: flex; gap: 8px; font-size: 12.5px !important; color: var(--ink-soft); }
+.care b { flex: none; font-size: 11px; background: #e5f1e8; color: var(--green); border-radius: 4px; padding: 0 6px; height: fit-content; margin-top: 2px; }
+.lucky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0 0; }
+.lucky-grid div { background: var(--gold-soft); border-radius: 10px; padding: 8px 10px; }
+.lucky-grid dt { font-size: 11px; color: var(--gold); font-weight: 700; }
+.lucky-grid dd { margin: 2px 0 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }

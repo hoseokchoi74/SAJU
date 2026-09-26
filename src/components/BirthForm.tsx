@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react'
-import { bank } from '../data/bank'
-import { fmtDays, PREFECTURES, ZODIAC } from '../data/content'
+import { PREFECTURES } from '../data/content'
 import { useT } from '../lib/i18n'
-import { BRANCHES, ELEMENT_LUCK, getPersonalMonthly, getPillars, type PersonalMonthly, type Pillars } from '../lib/koyomi'
+import { getPersonalMonthly, getPillars, type PersonalMonthly, type Pillars } from '../lib/koyomi'
+import { Result } from './Result'
 
 const years = Array.from({ length: 2025 - 1930 + 1 }, (_, i) => 2025 - i)
 const range = (n: number, from = 1) => Array.from({ length: n }, (_, i) => i + from)
@@ -89,62 +89,3 @@ export function BirthForm() {
   )
 }
 
-function Result({ p, month }: { p: Pillars; month: PersonalMonthly }) {
-  const { lang, t } = useT()
-  const bk = bank(lang)
-  const dm = bk.dayMaster(p.dayMaster)
-  const theme = bk.tenGod(month.theme)
-  const zodiac = ZODIAC[BRANCHES.indexOf(p.year[1])]
-  const color = ELEMENT_LUCK[p.dayMasterElement].color
-
-  return (
-    <div className="mini-result" role="status">
-      <div className="pillars">
-        {[
-          [t('時', '시'), p.hour ?? '—'],
-          [t('日', '일'), p.day],
-          [t('月', '월'), p.month],
-          [t('年', '년'), p.year],
-        ].map(([label, pl], i) => (
-          <div key={i} className={i === 1 ? 'pillar main' : 'pillar'}>
-            <span>{label}{t('柱', '주')}</span>
-            <b>{pl[0]}</b>
-            <b>{pl[1] ?? ''}</b>
-          </div>
-        ))}
-      </div>
-
-      <div className="res-block">
-        <p className="res-label">{t('あなたの本質', '당신의 본질')}</p>
-        <p className="res-head">
-          <b style={{ color }}>{p.dayMaster}</b>
-          {t(`(${dm.yomi})`, `(${dm.yomi})`)} — {dm.image}
-        </p>
-        <p>{dm.nature}</p>
-        <p className="res-sub">
-          {t(`日干: ${p.dayMaster}・${zodiac.kanji}年生まれ`, `일간: ${p.dayMaster} · ${zodiac.ko}`)}
-        </p>
-      </div>
-
-      <div className="res-block theme">
-        <p className="res-label">
-          {month.month}
-          {t('月のテーマ', '월의 테마')}
-          <span className="tg">{bk.tenGodName(month.theme)}</span>
-        </p>
-        <p className="res-head">{theme.title}</p>
-        <p>{theme.body}</p>
-        <p className="rank-line"><b className="ok">{t('開運', '개운')}</b>{theme.action}</p>
-        <p className="rank-line"><b className="ng">{t('注意', '주의')}</b>{theme.caution}</p>
-        <p className="days">
-          <span><b className="ok">{t('開運日', '개운일')}</b>{fmtDays(month.month, month.luckyDays)}</span>
-          <span><b className="ng">{t('注意日', '주의일')}</b>{fmtDays(month.month, month.cautionDays)}</span>
-        </p>
-      </div>
-
-      <p className="form-note">
-        {t('※ 年間の運勢や相性占いは近日公開予定です', '※ 연간 운세와 궁합 점은 곧 공개 예정입니다')}
-      </p>
-    </div>
-  )
-}

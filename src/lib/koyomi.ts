@@ -232,6 +232,75 @@ export function tenGod(dayStem: string, other: string): TenGod {
   return TEN_GODS[diff * 2 + (samePolarity ? 0 : 1)]
 }
 
+// ---- 五行バランス・身強/身弱 ----
+
+export function elementCounts(p: Pillars): Record<Element, number> {
+  const counts: Record<Element, number> = { 木: 0, 火: 0, 土: 0, 金: 0, 水: 0 }
+  for (const pl of [p.year, p.month, p.day, p.hour]) {
+    if (!pl) continue
+    counts[STEM_ELEMENT[STEMS.indexOf(pl[0])]]++
+    counts[BRANCH_ELEMENT[BRANCHES.indexOf(pl[1])]]++
+  }
+  return counts
+}
+
+/** 日干を助ける(同じ五行・生じる五行)字の比率で身強かを判定。月支(季節)は2倍に数える。 */
+function isStrong(p: Pillars): boolean {
+  const dm = p.dayMasterElement
+  const supports = (e: Element) => e === dm || generates(e, dm)
+  let support = 0
+  let total = 0
+  const add = (e: Element, w = 1) => {
+    total += w
+    if (supports(e)) support += w
+  }
+  for (const pl of [p.year, p.month, p.hour]) if (pl) add(STEM_ELEMENT[STEMS.indexOf(pl[0])])
+  for (const pl of [p.year, p.day, p.hour]) if (pl) add(BRANCH_ELEMENT[BRANCHES.indexOf(pl[1])])
+  add(BRANCH_ELEMENT[BRANCHES.indexOf(p.month[1])], 2)
+  return support / total >= 0.45
+}
+
+// ---- 運勢別スコア ----
+
+export const CATEGORIES = ['money', 'love', 'work', 'health', 'social'] as const
+export type Category = (typeof CATEGORIES)[number]
+type Effect = [money: number, love: number, work: number, health: number, social: number]
+
+// 月の十神が各運勢に与える影響
+const GOD_EFFECT: Record<TenGod, Effect> = {
+  比肩: [-0.5, 0, 0.3, 0.5, 0.5],
+  劫財: [-1.0, -0.3, 0, 0.3, 0.3],
+  食神: [0.5, 1.0, 0.3, 0.8, 0.5],
+  傷官: [0.5, 0.8, -0.8, -0.3, -0.3],
+  偏財: [1.2, 0.8, 0.3, 0, 0.8],
+  正財: [1.0, 0.5, 0.5, 0, 0.3],
+  偏官: [0, 0.3, 0.8, -1.0, -0.3],
+  正官: [0.3, 0.5, 1.2, 0, 0.5],
+  偏印: [-0.5, -0.5, 0.3, -0.3, -0.5],
+  印綬: [0, 0, 0.5, 0.8, 0.3],
+}
+
+// 日支(自分・パートナーの座)と月支の関係が与える影響
+const DAY_BRANCH_EFFECT: Partial<Record<Relation, Effect>> = {
+  支合: [0, 1.0, 0, 0, 0.5],
+  三合: [0, 0.5, 0, 0, 0.8],
+  比和: [0, 0, 0, 0, 0.3],
+  冲: [0, -1.0, -0.3, -0.8, 0],
+  刑: [0, 0, 0, -0.8, -0.3],
+  害: [0, 0, 0, 0, -0.8],
+}
+
+// 月支の本気(蔵干の主な天干)
+const MAIN_STEM = '癸己甲乙戊丙丁己庚辛戊壬'
+
+/** 桃花(咸池): 三合の組ごとに決まる支 */
+function peachBlossom(b: number): number {
+  if ([8, 0, 4].includes(b)) return 9 // 申子辰 → 酉
+  if ([2, 6, 10].includes(b)) return 3 // 寅午戌 → 卯
+  if ([5, 9, 1].includes(b)) return 6 // 巳酉丑 → 午
+  return 0 // 亥卯未 → 子
+}
+
 export interface PersonalMonthly {
   year: number
   month: number
@@ -239,14 +308,54 @@ export interface PersonalMonthly {
   theme: TenGod
   luckyDays: number[]
   cautionDays: number[]
+  overall: number
+  scores: Record<Category, number>
+  counts: Record<Element, number>
+  strong: boolean
+  /** 八字の中で最も少ない五行(健康運のセルフケアに使う) */
+  weakElement: Element
+  /** 身強なら日干が生じる五行(発散)、身弱なら日干を生む五行(補い) */
+  luckyElement: Element
 }
 
-/** 個人の月運: 月干の十神をテーマに、日支から見た開運日・注意日を出す(fromDay より前の日は除く) */
+/** 個人の月運: 月干の十神をテーマに、運勢別スコアと開運日・注意日を出す(fromDay より前の日は除く) */
 export function getPersonalMonthly(p: Pillars, year: number, month: number, fromDay = 1): PersonalMonthly {
   const monthPillar = getGapja(year, month, 15).monthPillarHanja
+  const mBranch = BRANCHES.indexOf(monthPillar[1])
+  const dayBranch = BRANCHES.indexOf(p.day[1])
+  const yearBranch = BRANCHES.indexOf(p.year[1])
+  const theme = tenGod(p.dayMaster, monthPillar[0])
+  const branchGod = tenGod(p.dayMaster, MAIN_STEM[mBranch])
+  const strong = isStrong(p)
+
+  const s: Effect = [3, 3, 3, 3, 3]
+  GOD_EFFECT[theme].forEach((v, i) => (s[i] += v))
+  GOD_EFFECT[branchGod].forEach((v, i) => (s[i] += v * 0.5))
+  DAY_BRANCH_EFFECT[branchRelation(dayBranch, mBranch)]?.forEach((v, i) => (s[i] += v))
+  if (mBranch === peachBlossom(dayBranch) || mBranch === peachBlossom(yearBranch)) s[1] += 1
+
+  // 身強は財・官・食傷の月、身弱は比劫・印の月に力を発揮しやすい
+  const family = Math.floor(TEN_GODS.indexOf(theme) / 2) // 0比劫 1食傷 2財 3官 4印
+  const fits = strong ? family >= 1 && family <= 3 : family === 0 || family === 4
+  s.forEach((_, i) => (s[i] += fits ? 0.3 : -0.2))
+
+  const clamp = (x: number) => Math.min(5, Math.max(1, Math.round(x)))
+  const scores = Object.fromEntries(CATEGORIES.map((c, i) => [c, clamp(s[i])])) as Record<Category, number>
+  // 平均すると幅が縮むので、3を中心に広げる。総合運は不安をあおらないよう★2を下限に。
+  const overall = Math.max(2, clamp(3 + (s.reduce((a, b) => a + b, 0) / s.length - 3) * 2))
+
+  const counts = elementCounts(p)
+  const weakElement = ELEMENTS.reduce((a, b) => (counts[b] < counts[a] ? b : a))
+  const dmIdx = ELEMENTS.indexOf(p.dayMasterElement)
+  const luckyElement = strong ? ELEMENTS[(dmIdx + 1) % 5] : ELEMENTS[(dmIdx + 4) % 5]
+
   const days = getMonthDays(year, month).filter((d) => d.day >= fromDay)
-  const { lucky, caution } = pickDays(BRANCHES.indexOf(p.day[1]), days)
-  return { year, month, monthPillar, theme: tenGod(p.dayMaster, monthPillar[0]), luckyDays: lucky, cautionDays: caution }
+  const { lucky, caution } = pickDays(dayBranch, days)
+  return {
+    year, month, monthPillar, theme,
+    luckyDays: lucky, cautionDays: caution,
+    overall, scores, counts, strong, weakElement, luckyElement,
+  }
 }
 
 // ---- 個人の四柱 ----
