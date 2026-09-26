@@ -120,13 +120,59 @@ const RELATION_SCORE: Record<Relation, number> = {
 const generates = (a: Element, b: Element) => ELEMENTS[(ELEMENTS.indexOf(a) + 1) % 5] === b
 const controls = (a: Element, b: Element) => ELEMENTS[(ELEMENTS.indexOf(a) + 2) % 5] === b
 
+/** 月干の五行から見た「今月の注目運」 */
+export type Focus = 'learn' | 'friend' | 'money' | 'work' | 'love'
+
+function focusOf(own: Element, other: Element): Focus {
+  if (generates(other, own)) return 'learn' // 生じられる: 学び・サポート
+  if (other === own) return 'friend'
+  if (controls(own, other)) return 'money' // 自分が剋す: 財
+  if (controls(other, own)) return 'work' // 剋される: 官(仕事・責任)
+  return 'love' // 自分が生じる: 表現・恋愛
+}
+
+/**
+ * 支(十二支)にとっての開運日・注意日。
+ * 開運日: 日支と支合/三合 かつ 吉日(最強開運日を優先)。該当がなければ条件を段階的にゆるめる。
+ * 注意日: 日支と冲。
+ */
+export function pickDays(branch: number, days: DayInfo[]): { lucky: number[]; caution: number[] } {
+  const LUCK_ORDER: Record<DayLuck, number> = { best: 0, good: 1, normal: 2, caution: 3 }
+  const rel = (d: DayInfo) => branchRelation(branch, BRANCHES.indexOf(d.dayPillar[1]))
+  const harmony = (d: DayInfo) => rel(d) === '支合' || rel(d) === '三合'
+  const lucky_ = (d: DayInfo) => d.luck === 'best' || d.luck === 'good'
+  const tiers: ((d: DayInfo) => boolean)[] = [
+    (d) => harmony(d) && lucky_(d), // 相性の良い支 × 吉日
+    (d) => harmony(d) && d.luck === 'normal', // 相性の良い支
+    (d) => lucky_(d) && rel(d) !== '冲' && rel(d) !== '刑' && rel(d) !== '害', // 吉日(相性の悪い支を除く)
+  ]
+  const picked = tiers.map((fn) => days.filter(fn)).find((c) => c.length) ?? []
+  const lucky = picked
+    .sort((a, b) => LUCK_ORDER[a.luck] - LUCK_ORDER[b.luck] || a.day - b.day)
+    .slice(0, 3)
+    .map((d) => d.day)
+    .sort((a, b) => a - b)
+  const caution = days
+    .filter((d) => branchRelation(branch, BRANCHES.indexOf(d.dayPillar[1])) === '冲')
+    .sort((a, b) => LUCK_ORDER[b.luck] - LUCK_ORDER[a.luck] || a.day - b.day)
+    .slice(0, 2)
+    .map((d) => d.day)
+    .sort((a, b) => a - b)
+  return { lucky, caution }
+}
+
 export interface ZodiacMonthly {
   branch: number
   relation: Relation
+  /** 同じ関係の干支どうしで文章が重ならないよう割り振る番号 */
+  variant: number
+  focus: Focus
   score: number
   stars: number
   rank: number
   luckyElement: Element
+  luckyDays: number[]
+  cautionDays: number[]
 }
 
 /** 指定月の十二支別運勢。月の干支はその月の15日(節入り後)で判定する。 */
@@ -134,6 +180,9 @@ export function getZodiacMonthly(year: number, month: number): { monthPillar: st
   const monthPillar = getGapja(year, month, 15).monthPillarHanja
   const mStem = STEM_ELEMENT[STEMS.indexOf(monthPillar[0])]
   const mBranch = BRANCHES.indexOf(monthPillar[1])
+  const days = getMonthDays(year, month)
+  const seed = year * 12 + month
+  const groupCount: Partial<Record<Relation, number>> = {}
 
   const list = Array.from({ length: 12 }, (_, b) => {
     const relation = branchRelation(b, mBranch)
@@ -148,11 +197,56 @@ export function getZodiacMonthly(year: number, month: number): { monthPillar: st
     score = Math.min(5, Math.max(1, score))
     // ラッキー五行: 自分の五行を生む五行
     const luckyElement = ELEMENTS[(ELEMENTS.indexOf(own) + 4) % 5]
-    return { branch: b, relation, score, stars: Math.round(score), rank: 0, luckyElement }
+    const idx = groupCount[relation] ?? 0
+    groupCount[relation] = idx + 1
+    const { lucky, caution } = pickDays(b, days)
+    return {
+      branch: b,
+      relation,
+      variant: seed + idx,
+      focus: focusOf(own, mStem),
+      score,
+      stars: Math.round(score),
+      rank: 0,
+      luckyElement,
+      luckyDays: lucky,
+      cautionDays: caution,
+    }
   })
 
   ;[...list].sort((a, b) => b.score - a.score).forEach((z, i) => (z.rank = i + 1))
   return { monthPillar, list }
+}
+
+// ---- 十神(通変星) ----
+
+export const TEN_GODS = ['比肩', '劫財', '食神', '傷官', '偏財', '正財', '偏官', '正官', '偏印', '印綬'] as const
+export type TenGod = (typeof TEN_GODS)[number]
+
+/** 日干から見た other(天干)の十神 */
+export function tenGod(dayStem: string, other: string): TenGod {
+  const a = STEMS.indexOf(dayStem)
+  const b = STEMS.indexOf(other)
+  const diff = (Math.floor(b / 2) - Math.floor(a / 2) + 5) % 5 // 0同 1我生 2我剋 3剋我 4生我
+  const samePolarity = a % 2 === b % 2
+  return TEN_GODS[diff * 2 + (samePolarity ? 0 : 1)]
+}
+
+export interface PersonalMonthly {
+  year: number
+  month: number
+  monthPillar: string
+  theme: TenGod
+  luckyDays: number[]
+  cautionDays: number[]
+}
+
+/** 個人の月運: 月干の十神をテーマに、日支から見た開運日・注意日を出す(fromDay より前の日は除く) */
+export function getPersonalMonthly(p: Pillars, year: number, month: number, fromDay = 1): PersonalMonthly {
+  const monthPillar = getGapja(year, month, 15).monthPillarHanja
+  const days = getMonthDays(year, month).filter((d) => d.day >= fromDay)
+  const { lucky, caution } = pickDays(BRANCHES.indexOf(p.day[1]), days)
+  return { year, month, monthPillar, theme: tenGod(p.dayMaster, monthPillar[0]), luckyDays: lucky, cautionDays: caution }
 }
 
 // ---- 個人の四柱 ----

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { birthYears, texts, ZODIAC } from '../data/content'
+import { bank } from '../data/bank'
+import { birthYears, fmtDays, texts, ZODIAC } from '../data/content'
 import { useT } from '../lib/i18n'
 import { ELEMENT_LUCK, getZodiacMonthly, type DayInfo } from '../lib/koyomi'
 
@@ -8,6 +9,7 @@ const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n)
 export function Ranking({ today }: { today: DayInfo }) {
   const { lang, t } = useT()
   const tx = texts(lang)
+  const bk = bank(lang)
   const months = useMemo(() => {
     const next = today.month === 12 ? { year: today.year + 1, month: 1 } : { year: today.year, month: today.month + 1 }
     return [{ year: today.year, month: today.month, cur: true }, { ...next, cur: false }]
@@ -48,7 +50,8 @@ export function Ranking({ today }: { today: DayInfo }) {
         <ol className="rank-grid">
           {ranked.map((z) => {
             const zd = ZODIAC[z.branch]
-            const rt = tx.relation[z.relation]
+            const rt = bk.relation(z.relation, z.variant)
+            const fc = bk.focus(z.focus, z.branch + target.year * 12 + target.month)
             const lucky = tx.luck[z.luckyElement]
             const fold = z.rank > 3
             const isOpen = open.includes(z.branch)
@@ -67,8 +70,13 @@ export function Ranking({ today }: { today: DayInfo }) {
                 </button>
                 <p className="rank-title">{rt.title}</p>
                 <div className="rank-body">
+                  <p className="focus"><span className={`focus-tag f-${z.focus}`}>{fc.label}</span>{fc.line}</p>
                   <p className="rank-line"><b className="ok">{t('開運', '개운')}</b>{rt.action}</p>
                   <p className="rank-line"><b className="ng">{t('注意', '주의')}</b>{rt.caution}</p>
+                  <p className="days">
+                    <span><b className="ok">{t('開運日', '개운일')}</b>{fmtDays(target.month, z.luckyDays)}</span>
+                    <span><b className="ng">{t('注意日', '주의일')}</b>{fmtDays(target.month, z.cautionDays)}</span>
+                  </p>
                   <p className="lucky">
                     <span className="dot" style={{ background: ELEMENT_LUCK[z.luckyElement].color }} />
                     {t('ラッキーカラー', '행운의 색')} {lucky.colorName}

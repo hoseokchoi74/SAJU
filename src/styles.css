@@ -313,3 +313,25 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.35; mar
 }
 .lang-tag { background: var(--shu); border-radius: 999px; padding: 2px 8px; font-size: 11px; letter-spacing: 0.05em; }
 :lang(ko) body, html[lang='ko'] body { word-break: keep-all; }
+
+/* ---------- 注目運・開運日 / 個人結果 ---------- */
+.focus { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 6px; font-size: 13px; color: var(--ink-soft); }
+.focus-tag { flex: none; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 9px; margin-top: 1px; border: 1px solid currentColor; }
+.f-learn { color: #2f5aa8; }
+.f-friend { color: #3f8f5a; }
+.f-money { color: var(--gold); }
+.f-work { color: var(--ink); }
+.f-love { color: #c2456f; }
+.days { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; font-size: 13px; }
+.days span { display: flex; align-items: center; gap: 6px; }
+.days b { font-size: 11px; border-radius: 4px; padding: 0 6px; line-height: 1.6; }
+.days b.ok { background: #e5f1e8; }
+.days b.ng { background: var(--shu-soft); }
+.res-block { border-top: 1px dashed var(--line); padding-top: 12px; margin-top: 12px; }
+.res-block p { margin: 4px 0; }
+.res-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--shu); display: flex; align-items: center; gap: 8px; }
+.res-label .tg { font-family: var(--serif); font-size: 13px; color: var(--ink); background: var(--gold-soft); border-radius: 4px; padding: 0 8px; letter-spacing: 0; }
+.res-head { font-family: var(--serif); font-weight: 700; font-size: 17px; }
+.res-head b { font-size: 22px; }
+.res-sub { font-size: 12px; color: var(--ink-faint); }
+.res-block.theme { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }

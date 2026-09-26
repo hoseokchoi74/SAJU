@@ -1,7 +1,7 @@
-// テンプレート文章バンク(第1段階: 手書きの見本。後でAIで一括生成して差し替える)
+// 暦まわりの固定文言(六曜・選日・干支・都道府県)。運勢の文章は bank.ts。
 // *_KO は検討用の韓国語訳
 import type { Lang } from '../lib/i18n'
-import type { Element, Relation, Rokuyo, Senjitsu } from '../lib/koyomi'
+import type { Element, Rokuyo, Senjitsu } from '../lib/koyomi'
 
 export const ZODIAC = [
   { kanji: '子', yomi: 'ね', animal: 'ねずみ', ko: '쥐띠' },
@@ -18,89 +18,14 @@ export const ZODIAC = [
   { kanji: '亥', yomi: 'い', animal: 'いのしし', ko: '돼지띠' },
 ]
 
+/** 日付リストを「10/14・10/26」形式に */
+export const fmtDays = (month: number, days: number[]) => (days.length ? days.map((d) => `${month}/${d}`).join('・') : '—')
+
 /** その干支に当たる生まれ年(新しい順に6つ) */
 export function birthYears(branch: number, latest = 2025): number[] {
   const out: number[] = []
   for (let y = latest; out.length < 6; y--) if ((((y - 4) % 12) + 12) % 12 === branch) out.push(y)
   return out
-}
-
-type RelationText = Record<Relation, { title: string; action: string; caution: string }>
-
-const RELATION_TEXT: RelationText = {
-  支合: {
-    title: '人との縁がつながる、追い風の月',
-    action: '気になる人に自分から連絡を。紹介や誘いは積極的に受けて◎',
-    caution: '頼まれごとを抱えすぎないように',
-  },
-  三合: {
-    title: 'チームワークで運が広がる月',
-    action: '仲間との共同作業や相談ごとが実を結びやすい時期',
-    caution: '人任せにせず、最後の確認は自分で',
-  },
-  比和: {
-    title: '自分のペースが味方になる月',
-    action: '続けてきたことをもう一歩深めると成果につながります',
-    caution: '頑固になりすぎず、周りの意見にも耳を',
-  },
-  平: {
-    title: '穏やかに整える、準備の月',
-    action: '部屋や予定の整理整頓で、来月の運を呼び込んで',
-    caution: '大きな決断は急がず、情報集めを優先',
-  },
-  害: {
-    title: '小さなすれ違いに気をつけたい月',
-    action: 'こまめな「ありがとう」が運気のお守りに',
-    caution: '言葉足らずの誤解に注意。大事な話は対面で',
-  },
-  刑: {
-    title: '心と体をいたわる、見直しの月',
-    action: '睡眠と食事を整えることが最大の開運アクション',
-    caution: '無理なスケジュールや衝動買いは控えめに',
-  },
-  冲: {
-    title: '変化の波が来る、切り替えの月',
-    action: '古いものを手放すと新しい流れが入ってきます',
-    caution: '契約・引っ越しなど大きな決断は吉日を選んで',
-  },
-}
-
-const RELATION_TEXT_KO: RelationText = {
-  支合: {
-    title: '사람과의 인연이 이어지는, 순풍의 달',
-    action: '신경 쓰이는 사람에게 먼저 연락을. 소개나 초대는 적극적으로 받으면 ◎',
-    caution: '부탁받은 일을 너무 많이 떠안지 않도록',
-  },
-  三合: {
-    title: '팀워크로 운이 넓어지는 달',
-    action: '동료와의 공동 작업이나 상담이 결실을 맺기 쉬운 시기',
-    caution: '남에게 맡기지 말고 마지막 확인은 직접',
-  },
-  比和: {
-    title: '나만의 페이스가 내 편이 되는 달',
-    action: '계속해 온 일을 한 걸음 더 깊이 파면 성과로 이어집니다',
-    caution: '너무 고집부리지 말고 주변 의견에도 귀를',
-  },
-  平: {
-    title: '차분히 정돈하는 준비의 달',
-    action: '방과 일정을 정리정돈해서 다음 달 운을 불러들이세요',
-    caution: '큰 결정은 서두르지 말고 정보 수집을 우선',
-  },
-  害: {
-    title: '작은 엇갈림에 주의하고 싶은 달',
-    action: '자주 하는 "고마워"가 운의 부적이 됩니다',
-    caution: '말이 부족해서 생기는 오해에 주의. 중요한 얘기는 직접 만나서',
-  },
-  刑: {
-    title: '몸과 마음을 돌보는 재점검의 달',
-    action: '수면과 식사를 챙기는 것이 최고의 개운 행동',
-    caution: '무리한 일정이나 충동구매는 자제',
-  },
-  冲: {
-    title: '변화의 물결이 오는 전환의 달',
-    action: '낡은 것을 놓아주면 새로운 흐름이 들어옵니다',
-    caution: '계약·이사 등 큰 결정은 길일을 골라서',
-  },
 }
 
 type RokuyoText = Record<Rokuyo, { yomi: string; short: string; good: string; avoid: string }>
@@ -147,34 +72,6 @@ export const SENJITSU_NAME_KO: Record<Senjitsu, string> = {
   己巳の日: '기사일(己巳の日)',
 }
 
-type DayMasterText = Record<string, { yomi: string; image: string }>
-
-const DAY_MASTER_TEXT: DayMasterText = {
-  甲: { yomi: 'きのえ', image: 'まっすぐ伸びる大樹' },
-  乙: { yomi: 'きのと', image: 'しなやかな草花' },
-  丙: { yomi: 'ひのえ', image: '明るく照らす太陽' },
-  丁: { yomi: 'ひのと', image: 'やさしく灯るろうそく' },
-  戊: { yomi: 'つちのえ', image: 'どっしりとした山' },
-  己: { yomi: 'つちのと', image: '実りを育てる田畑' },
-  庚: { yomi: 'かのえ', image: '鍛えられた鋼' },
-  辛: { yomi: 'かのと', image: 'きらめく宝石' },
-  壬: { yomi: 'みずのえ', image: '広がる大海' },
-  癸: { yomi: 'みずのと', image: 'めぐみの雨' },
-}
-
-const DAY_MASTER_TEXT_KO: DayMasterText = {
-  甲: { yomi: '갑', image: '곧게 뻗는 큰 나무' },
-  乙: { yomi: '을', image: '유연한 풀꽃' },
-  丙: { yomi: '병', image: '밝게 비추는 태양' },
-  丁: { yomi: '정', image: '은은하게 빛나는 촛불' },
-  戊: { yomi: '무', image: '듬직한 산' },
-  己: { yomi: '기', image: '결실을 키우는 논밭' },
-  庚: { yomi: '경', image: '단련된 강철' },
-  辛: { yomi: '신', image: '반짝이는 보석' },
-  壬: { yomi: '임', image: '넓게 펼쳐진 바다' },
-  癸: { yomi: '계', image: '은혜로운 비' },
-}
-
 const LUCK_NAME: Record<Element, { colorName: string; direction: string }> = {
   木: { colorName: 'グリーン', direction: '東' },
   火: { colorName: 'レッド', direction: '南' },
@@ -195,11 +92,9 @@ const LUCK_NAME_KO: typeof LUCK_NAME = {
 export function texts(lang: Lang) {
   const ko = lang === 'ko'
   return {
-    relation: ko ? RELATION_TEXT_KO : RELATION_TEXT,
     rokuyo: ko ? ROKUYO_TEXT_KO : ROKUYO_TEXT,
     senjitsu: ko ? SENJITSU_TEXT_KO : SENJITSU_TEXT,
     senjitsuName: (s: Senjitsu) => (ko ? SENJITSU_NAME_KO[s] : s),
-    dayMaster: ko ? DAY_MASTER_TEXT_KO : DAY_MASTER_TEXT,
     luck: ko ? LUCK_NAME_KO : LUCK_NAME,
     weekdays: ko ? '일월화수목금토' : '日月火水木金土',
   }
