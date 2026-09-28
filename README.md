@@ -19,7 +19,7 @@
 
 - `src/routes.ts` がページ一覧・タイトル/説明文・範囲(暦ページの年 `YEARS`、月別ページ `FIRST_MONTH`〜`LAST_MONTH`)を持つ。
 - `npm run build` = クライアントビルド → SSRビルド(`src/entry-server.tsx`)→ `scripts/prerender.mjs` で `dist/**.html` と `sitemap.xml` を生成。Vercel の `cleanUrls` で拡張子なしのURLになる。
-- ナビの「今月・今年」はビルド日時で決まるため、**毎月1回は再デプロイ**する。範囲を延ばすときは `LAST_MONTH` / `YEARS` を更新(公開済みURLを消さないよう `FIRST_MONTH` は動かさない)。
+- ナビの「今月・今年」はビルド日時で決まるため、毎月1日 09:05(JST)に Vercel Cron が `api/redeploy.js` を呼び、Deploy Hook で自動再デプロイする(Vercel 環境変数 `DEPLOY_HOOK_URL`・`CRON_SECRET` が必要)。範囲を延ばすときは `LAST_MONTH` / `YEARS` を更新(公開済みURLを消さないよう `FIRST_MONTH` は動かさない)。
 
 ## 開発
 ```bash
