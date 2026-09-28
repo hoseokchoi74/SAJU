@@ -1,6 +1,7 @@
 // こよみ計算エンジン: 万歳暦(manseryeok) + 六曜 + 選日 + 干支の相性スコア
 // AIを使わず、すべて規則ベースで計算する。
 import { calculateSaju, getGapja, solarToLunar } from '@fullstackfamily/manseryeok'
+import { setsuAt, setsuBranchOfDate } from './sekki.ts'
 
 export const STEMS = '甲乙丙丁戊己庚辛壬癸'
 export const BRANCHES = '子丑寅卯辰巳午未申酉戌亥'
@@ -57,7 +58,8 @@ export function getDayInfo(year: number, month: number, day: number): DayInfo {
   const r = solarToLunar(year, month, day)
   const { yearPillarHanja, monthPillarHanja, dayPillarHanja } = r.gapja
   const rokuyo = rokuyoOf(r.lunar.month, r.lunar.day)
-  const monthBranch = monthPillarHanja[1]
+  // 選日の月は節入り日を丸ごと新しい月とする(sekki.ts)。表示用の月柱(monthPillar)は万歳暦のまま。
+  const monthBranch = setsuBranchOfDate(year, month, day)
   const dayBranch = dayPillarHanja[1]
 
   const senjitsu: Senjitsu[] = []
@@ -429,7 +431,24 @@ export interface Pillars {
  * 出生地の経度で真太陽時に補正してから四柱を出す。
  * ライブラリ内蔵の補正は東経135°より東(東京など)で分が60を超えるため、補正はここで行う。
  */
+/**
+ * 年柱・月柱: 節入り時刻(sekki.ts)と出生時刻(日本時間の時計の時刻)を比べて決める。
+ * 万歳暦の月柱は節入り日の扱いが年によってずれるため使わない。時刻不明なら正午とみなす。
+ */
+function yearMonthPillars(input: BirthInput): { year: string; month: string } {
+  const ms = Date.UTC(input.year, input.month - 1, input.day, input.hour ?? 12, input.minute ?? 0) - 9 * 3600000
+  const { monthIndex, sajuYear } = setsuAt(ms)
+  const yearStem = (((sajuYear - 4) % 10) + 10) % 10
+  const yearBranch = (((sajuYear - 4) % 12) + 12) % 12
+  const monthStem = (((yearStem % 5) * 2 + 2) + monthIndex) % 10 // 五虎遁: 甲己年→丙寅月 …
+  return {
+    year: STEMS[yearStem] + BRANCHES[yearBranch],
+    month: STEMS[monthStem] + BRANCHES[(monthIndex + 2) % 12],
+  }
+}
+
 export function getPillars(input: BirthInput): Pillars {
+  const ym = yearMonthPillars(input)
   let { year, month, day } = input
   let hour = input.hour
   let minute = input.minute ?? 0
@@ -449,8 +468,8 @@ export function getPillars(input: BirthInput): Pillars {
   const s = calculateSaju(year, month, day, hour, minute, { applyTimeCorrection: false })
   const dayMaster = s.dayPillarHanja[0]
   return {
-    year: s.yearPillarHanja,
-    month: s.monthPillarHanja,
+    year: ym.year,
+    month: ym.month,
     day: s.dayPillarHanja,
     hour: s.hourPillarHanja ?? null,
     dayMaster,
