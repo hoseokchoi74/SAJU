@@ -366,3 +366,97 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.35; mar
 .lucky-grid dd { margin: 2px 0 0; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
 .animal { white-space: nowrap; display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 500; color: var(--ink-soft); background: var(--paper-2); border-radius: 999px; padding: 1px 8px; vertical-align: 2px; }
+
+/* ---------- SEOページ(暦・運勢) ---------- */
+.page { padding: 28px 20px 72px; }
+.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; padding: 0; margin: 0 0 18px; font-size: 12px; color: var(--ink-faint); }
+.breadcrumb li + li::before { content: '›'; margin-right: 4px; }
+.breadcrumb a { color: var(--ink-soft); }
+.page-head { margin-bottom: 24px; }
+.page-head h1 { font-size: clamp(26px, 4vw, 38px); letter-spacing: 0.03em; }
+.page-head .lead { margin: 12px 0 0; }
+.page-head .sub { margin: 6px 0 0; color: var(--ink-soft); }
+.page-head .stars { color: var(--gold); letter-spacing: 1px; }
+.eto-head { display: flex; align-items: center; gap: 18px; }
+.zodiac-seal.big { flex: none; width: 76px; height: 76px; font-size: 38px; border-width: 2px; background: var(--card); }
+.stat-chips { list-style: none; padding: 0; margin: 0 0 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.stat-chips li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 12px; color: var(--ink-soft); }
+.stat-chips b { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-right: 2px; }
+.stat-chips span { display: block; font-weight: 700; color: var(--ink); font-size: 13px; }
+.card-block { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin: 0 0 16px; }
+.card-block h2 { font-size: 20px; margin-bottom: 10px; }
+.card-block h3 { font-size: 16px; margin: 16px 0 6px; }
+.card-block p { margin: 6px 0; }
+.card-block.best { border-color: var(--gold); background: linear-gradient(180deg, #fff8e6, var(--card) 70%); }
+.note { font-size: 12.5px; color: var(--ink-soft); }
+.inline-days { line-height: 1.9; }
+.day-list { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+.day-list li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; background: #e5f1e8; border-radius: 8px; padding: 6px 10px; }
+.day-list.ng li { background: var(--shu-soft); }
+.day-list b { font-size: 15px; }
+.day-list .tags { font-size: 12.5px; color: var(--ink-soft); }
+.month-block { margin: 0 0 20px; }
+.month-block h2 { font-size: 19px; margin-bottom: 8px; }
+.kichi-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; font-size: 14px; }
+.kichi-table th { background: var(--paper-2); font-size: 12px; text-align: left; padding: 8px 10px; }
+.kichi-table td { border-top: 1px solid var(--line); padding: 8px 10px; vertical-align: top; }
+.kichi-table tr.best td { background: var(--gold-soft); }
+.kichi-table td.w0 { color: var(--shu); }
+.kichi-table td.w6 { color: #2f5aa8; }
+.kichi-table td small { display: block; font-size: 11px; color: var(--ink-faint); }
+.kt { display: inline-block; font-size: 12px; border-radius: 999px; padding: 1px 9px; margin: 1px 4px 1px 0; background: var(--paper-2); }
+.kt-天赦日 { background: var(--shu); color: #fff; }
+.kt-一粒万倍日 { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(169, 129, 47, 0.4); }
+.kt-寅の日, .kt-巳の日, .kt-己巳の日 { background: #e5f1e8; color: var(--green); }
+.meaning { margin: 0; display: grid; gap: 10px; }
+.meaning dt { font-weight: 700; font-family: var(--serif); }
+.meaning dd { margin: 2px 0 0; color: var(--ink-soft); font-size: 14px; }
+.mini-cals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+.mini-cal { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.mini-cal h2 { font-size: 16px; margin-bottom: 6px; text-align: center; }
+.mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.mini-grid .wd { font-size: 10px; color: var(--ink-faint); }
+.mini-grid .md { display: flex; flex-direction: column; border-radius: 6px; padding: 2px 0; }
+.mini-grid .md b { font-size: 12px; font-weight: 700; }
+.mini-grid .md small { font-size: 9px; color: var(--ink-soft); }
+.mini-grid .md.rk-大安 { background: var(--shu-soft); }
+.mini-grid .md.rk-大安 small { color: var(--shu); font-weight: 700; }
+.mini-grid .md.rk-仏滅 small { color: var(--ink-faint); }
+.mini-grid .md.best { outline: 1.5px solid var(--gold); }
+.mini-grid b.w0, .wd.w0 { color: var(--shu); }
+.mini-grid b.w6, .wd.w6 { color: #2f5aa8; }
+.taian-list { margin: 0; display: grid; gap: 6px; }
+.taian-list div { display: grid; grid-template-columns: 44px 1fr; gap: 8px; font-size: 14px; }
+.taian-list dt { font-weight: 700; }
+.taian-list dd { margin: 0; }
+.rokuyo-table td:first-child b { font-family: var(--serif); font-size: 16px; }
+.month-best { background: var(--gold-soft); border-radius: 12px; padding: 10px 14px; font-size: 14px; margin: 0 0 16px; }
+.month-best b { color: var(--gold); margin-right: 10px; }
+.rank-grid.static .rank-card { display: flex; flex-direction: column; }
+a.rank-head { text-decoration: none; color: inherit; cursor: pointer; }
+.more { margin-top: auto; padding-top: 8px; align-self: flex-end; font-size: 13px; font-weight: 700; color: var(--shu); text-decoration: none; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.lucky-grid.wide { margin: 0 0 16px; }
+.zodiac-chips { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; margin: 20px 0; }
+.zodiac-chips a { display: grid; place-items: center; aspect-ratio: 1; border-radius: 50%; border: 1.5px solid var(--ink); font-family: var(--serif); font-weight: 700; text-decoration: none; color: var(--ink); background: var(--card); }
+.zodiac-chips a.on { background: var(--shu); border-color: var(--shu); color: #fff; }
+.pager { display: flex; justify-content: space-between; gap: 12px; margin: 16px 0; }
+.pager a { font-weight: 700; color: var(--ink); text-decoration: none; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font-size: 14px; }
+.link-cards { display: grid; gap: 8px; margin-top: 16px; }
+.link-cards a { display: block; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-weight: 700; color: var(--ink); text-decoration: none; }
+.link-cards a:hover, .pager a:hover { border-color: var(--shu); color: var(--shu); }
+.section-more { text-align: center; margin: 20px 0 0; }
+.section-more a { font-weight: 700; color: var(--shu); }
+@media (max-width: 960px) {
+  .mini-cals { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  .page { padding: 20px 16px 56px; }
+  .mini-cals { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .zodiac-chips { grid-template-columns: repeat(6, 1fr); }
+  .kichi-table { font-size: 13px; }
+  .kichi-table th, .kichi-table td { padding: 7px 8px; }
+  .rokuyo-table th:nth-child(4), .rokuyo-table td:nth-child(4) { display: none; }
+  .zodiac-seal.big { width: 60px; height: 60px; font-size: 30px; }
+}

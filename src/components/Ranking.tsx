@@ -3,6 +3,7 @@ import { bank } from '../data/bank'
 import { birthYears, fmtDays, texts, ZODIAC } from '../data/content'
 import { useT } from '../lib/i18n'
 import { ELEMENT_LUCK, getZodiacMonthly, type DayInfo } from '../lib/koyomi'
+import { hasMonth, pathOf } from '../routes'
 
 const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n)
 
@@ -86,11 +87,23 @@ export function Ranking({ today }: { today: DayInfo }) {
                     <span className="sep">／</span>
                     {t('方位', '방위')} {lucky.direction}
                   </p>
+                  {hasMonth(target) && (
+                    <a className="more" href={pathOf({ page: 'eto', branch: z.branch, ym: target })}>
+                      {t('詳しく見る', '자세히 보기')} →
+                    </a>
+                  )}
                 </div>
               </li>
             )
           })}
         </ol>
+        {hasMonth(target) && (
+          <p className="section-more">
+            <a href={pathOf({ page: 'unsei', ym: target })}>
+              {t(`${target.year}年${target.month}月の運勢ランキングを詳しく見る`, `${target.year}년 ${target.month}월 운세 랭킹 자세히 보기`)} →
+            </a>
+          </p>
+        )}
       </div>
     </section>
   )

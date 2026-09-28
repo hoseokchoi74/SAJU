@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { texts } from '../data/content'
 import { useT } from '../lib/i18n'
 import { getMonthDays, type DayInfo } from '../lib/koyomi'
+import { pathOf, YEARS } from '../routes'
 
 export function KaiunCalendar({ today }: { today: DayInfo }) {
   const { lang, t } = useT()
@@ -110,6 +111,17 @@ export function KaiunCalendar({ today }: { today: DayInfo }) {
             </div>
           </div>
         </div>
+        {YEARS.includes(ym.year) && (
+          <p className="section-more">
+            <a href={pathOf({ page: 'kichijitsu', year: ym.year })}>
+              {t(`${ym.year}年の吉日カレンダー(一粒万倍日・天赦日)を見る`, `${ym.year}년 길일 달력 보기`)} →
+            </a>
+            {'　'}
+            <a href={pathOf({ page: 'rokuyo', year: ym.year })}>
+              {t(`${ym.year}年の六曜カレンダー`, `${ym.year}년 육요 달력`)} →
+            </a>
+          </p>
+        )}
       </div>
     </section>
   )

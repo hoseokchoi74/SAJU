@@ -11,7 +11,9 @@ export function useT() {
   return { lang, t: (ja: string, ko: string) => (lang === 'ko' ? ko : ja) }
 }
 
-export const reviewEnabled = () => import.meta.env.DEV || new URLSearchParams(location.search).has('review')
+// 事前レンダリング(サーバー)では window がないので常に false。クライアントではマウント後に判定する。
+export const reviewEnabled = () =>
+  typeof window !== 'undefined' && (import.meta.env.DEV || new URLSearchParams(window.location.search).has('review'))
 
 const KEY = 'koyomi-lang'
 export function loadLang(): Lang {

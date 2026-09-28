@@ -8,6 +8,19 @@
 - `src/data/content.ts` — 文章テンプレートバンク(日本語 + 検討用韓国語)
 - `src/lib/i18n.tsx` — 検討用の韓国語表示(開発サーバー、または `?review` 付きURLでのみ切替ボタン表示)
 
+## ページ構成(SEO)
+| URL | 内容 | 描画 |
+|---|---|---|
+| `/` | トップ(今日のこよみ・無料鑑定・ランキング) | クライアント(日付で変わるため) |
+| `/kichijitsu/2026` | 年間の吉日カレンダー | ビルド時に事前レンダリング |
+| `/rokuyo/2026` | 年間の六曜カレンダー | 〃 |
+| `/unsei/2026-10` | 月別の干支ランキング | 〃 |
+| `/eto/tora/2026-10` | 干支×月の運勢 | 〃 |
+
+- `src/routes.ts` がページ一覧・タイトル/説明文・範囲(暦ページの年 `YEARS`、月別ページ `FIRST_MONTH`〜`LAST_MONTH`)を持つ。
+- `npm run build` = クライアントビルド → SSRビルド(`src/entry-server.tsx`)→ `scripts/prerender.mjs` で `dist/**.html` と `sitemap.xml` を生成。Vercel の `cleanUrls` で拡張子なしのURLになる。
+- ナビの「今月・今年」はビルド日時で決まるため、**毎月1回は再デプロイ**する。範囲を延ばすときは `LAST_MONTH` / `YEARS` を更新(公開済みURLを消さないよう `FIRST_MONTH` は動かさない)。
+
 ## 開発
 ```bash
 npm install

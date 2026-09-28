@@ -1,10 +1,15 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import './styles.css'
-import App from './App.tsx'
+import { Root } from './Root.tsx'
 
-createRoot(document.getElementById('root')!).render(
+const el = document.getElementById('root')!
+const app = (
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <Root path={location.pathname} />
+  </StrictMode>
 )
+
+// 暦・運勢ページはビルド時に事前レンダリング済み(scripts/prerender.mjs)。トップはクライアントで描画する。
+if (el.hasChildNodes()) hydrateRoot(el, app)
+else createRoot(el).render(app)
