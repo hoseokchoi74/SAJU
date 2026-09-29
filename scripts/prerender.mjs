@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
 const ssr = await import(pathToFileURL(join(root, 'dist-ssr', 'entry-server.js')).href)
-const { render, staticRoutes, pathOf, metaOf, SITE, jsonLdOf, llmsTxt, llmsFullTxt } = ssr
+const { render, staticRoutes, pathOf, metaOf, SITE, jsonLdOf, llmsTxt, llmsFullTxt, currentLinks } = ssr
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const template = readFileSync(join(dist, 'index.html'), 'utf8')
@@ -64,6 +64,17 @@ const xml =
     .join('\n') +
   '\n</urlset>\n'
 writeFileSync(join(dist, 'sitemap.xml'), xml)
+
+// 「いつも最新」の短いURL(LINEのリッチメニュー等から固定リンクで使う)。
+// /unsei → 今月の干支別ランキング、/kichijitsu・/rokuyo → 今年のカレンダー。毎月の再デプロイで行き先が更新される
+const latest = currentLinks()
+for (const [name, to] of [['unsei', latest.unsei], ['kichijitsu', latest.kichijitsu], ['rokuyo', latest.rokuyo]]) {
+  const url = SITE + to
+  writeFileSync(
+    join(dist, `${name}.html`),
+    `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="${url}"><meta http-equiv="refresh" content="0; url=${to}"><title>こよみサジュ</title><script>location.replace(${JSON.stringify(to)} + location.search)</script></head><body><a href="${to}">${url}</a></body></html>\n`,
+  )
+}
 
 // AI向けのサイト案内(https://llmstxt.org/)
 writeFileSync(join(dist, 'llms.txt'), llmsTxt())

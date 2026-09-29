@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>richmenu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@500;700&display=block">
+<style>
+  :root { --paper:#f8f3e9; --paper2:#f0e7d6; --card:#fffdf8; --ink:#1e2944; --soft:#545d75; --shu:#c43d27; --gold:#a9812f; --goldsoft:#f3e8cc; --green:#3f8f5a; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 2500px; height: 1686px; overflow: hidden; background: var(--paper); }
+  body { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0; font-family: 'Zen Kaku Gothic New', sans-serif; color: var(--ink); }
+  .cell { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; border: 6px solid var(--paper2); }
+  .cell.a { background: var(--shu); color: #fff; }
+  .cell.b { background: var(--ink); color: #fff; }
+  .cell.c { background: var(--goldsoft); }
+  .cell.d { background: var(--card); }
+  .icon { width: 230px; height: 230px; border-radius: 40px; display: grid; place-items: center; font-family: 'Shippori Mincho B1', serif; font-weight: 800; font-size: 150px; line-height: 1; }
+  .a .icon { background: #fff; color: var(--shu); }
+  .b .icon { background: transparent; border: 10px solid #fff; border-radius: 50%; color: #fff; font-size: 130px; }
+  .c .icon { background: var(--gold); color: #fff; }
+  .d .icon { background: var(--ink); color: #fff; font-size: 130px; }
+  h2 { font-family: 'Shippori Mincho B1', serif; font-weight: 800; font-size: 118px; letter-spacing: 6px; line-height: 1.1; }
+  p { font-size: 58px; font-weight: 700; letter-spacing: 2px; opacity: 0.85; }
+  .c p, .d p { color: var(--soft); opacity: 1; }
+  .tag { position: absolute; top: 44px; right: 48px; font-size: 44px; font-weight: 700; padding: 10px 30px; border-radius: 999px; background: #fff; color: var(--shu); }
+</style>
+</head>
+<body>
+  <div class="cell a">
+    <span class="tag">無料</span>
+    <div class="icon">暦</div>
+    <h2>無料鑑定</h2>
+    <p>生年月日で金運・恋愛運まで</p>
+  </div>
+  <div class="cell b">
+    <div class="icon">運</div>
+    <h2>今月の運勢</h2>
+    <p>干支別ランキング・開運日</p>
+  </div>
+  <div class="cell c">
+    <div class="icon">吉</div>
+    <h2>吉日カレンダー</h2>
+    <p>一粒万倍日・天赦日</p>
+  </div>
+  <div class="cell d">
+    <div class="icon">六</div>
+    <h2>六曜カレンダー</h2>
+    <p>大安・仏滅がひと目で</p>
+  </div>
+</body>
+</html>
