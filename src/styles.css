@@ -471,3 +471,17 @@ a.rank-head { text-decoration: none; color: inherit; cursor: pointer; }
 .updated a { color: var(--ink-soft); }
 .plain-list { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14.5px; }
 .today-card.placeholder { min-height: 420px; background: var(--card); opacity: 0.6; }
+
+/* ---------- LINE友だち追加 ---------- */
+.line-actions { margin-top: 14px; }
+.line-add { display: inline-block; line-height: 0; }
+.line-add img { height: 36px; width: auto; }
+.line-qr-box { flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 10px 10px 6px; }
+.line-qr-box small { color: var(--ink-soft); font-size: 11px; }
+.line-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 16px 0; padding: 14px 16px; border-radius: 14px; background: #eafaf0; border: 1px solid rgba(6, 199, 85, 0.35); }
+.line-card-text { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--ink-soft); }
+.line-card-text b { color: var(--ink); font-size: 15px; }
+@media (max-width: 720px) {
+  .line-qr-box { display: none; }
+  .line-card { flex-direction: column; align-items: flex-start; }
+}

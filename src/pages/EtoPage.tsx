@@ -2,6 +2,7 @@ import { bank } from '../data/bank'
 import { birthYears, texts, ZODIAC } from '../data/content'
 import { Faq, Updated } from '../components/Faq'
 import { Breadcrumb } from '../components/Layout'
+import { LineCard } from '../components/LineFriend'
 import { useT } from '../lib/i18n'
 import { ELEMENT_LUCK, getMonthDays, getZodiacMonthly, type DayInfo } from '../lib/koyomi'
 import { hasMonth, pathOf, shiftYM, type YM } from '../routes'
@@ -144,6 +145,8 @@ export function EtoPage({ branch, ym }: { branch: number; ym: YM }) {
         {hasMonth(prev) ? <a href={pathOf({ page: 'eto', branch, ym: prev })}>← {t(`${prev.month}月の運勢`, `${prev.month}월 운세`)}</a> : <span />}
         {hasMonth(next) ? <a href={pathOf({ page: 'eto', branch, ym: next })}>{t(`${next.month}月の運勢`, `${next.month}월 운세`)} →</a> : <span />}
       </nav>
+
+      <LineCard context="page" />
 
       <nav className="link-cards">
         <a href={pathOf({ page: 'unsei', ym })}>{t(`${ym.year}年${ym.month}月の干支別ランキング`, `${ym.year}년 ${ym.month}월 띠별 랭킹`)} →</a>

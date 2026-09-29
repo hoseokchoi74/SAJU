@@ -1,6 +1,7 @@
 import { bank } from '../data/bank'
 import { fmtDays, texts, ZODIAC } from '../data/content'
 import { useT } from '../lib/i18n'
+import { LineCard } from './LineFriend'
 import { BRANCHES, CATEGORIES, ELEMENT_LUCK, STEMS, type Element, type PersonalMonthly, type Pillars } from '../lib/koyomi'
 
 const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n)
@@ -128,6 +129,8 @@ export function Result({ p, month }: { p: Pillars; month: PersonalMonthly }) {
           <dd>{tx.luck[lucky].direction}</dd>
         </div>
       </dl>
+
+      <LineCard context="result" />
 
       <p className="form-note">
         {t(

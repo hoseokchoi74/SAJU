@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { useT } from '../lib/i18n'
 import { currentLinks } from '../routes'
+import { LineLink } from './LineFriend'
 
 export function Layout({ children }: { children: ReactNode }) {
   const { t } = useT()
@@ -42,6 +43,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <a href={links.kichijitsu}>{t('吉日カレンダー', '길일 달력')}</a>
               <a href={links.rokuyo}>{t('六曜カレンダー', '육요 달력')}</a>
               <a href="/about">{t('こよみサジュとは', '코요미 사주란?')}</a>
+              <LineLink />
             </nav>
           </div>
           <p className="disclaimer">

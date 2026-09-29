@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BirthForm } from '../components/BirthForm'
 import { Faq } from '../components/Faq'
+import { LineBand } from '../components/LineFriend'
 import { KaiunCalendar } from '../components/KaiunCalendar'
 import { Ranking } from '../components/Ranking'
 import { TodayCard } from '../components/TodayCard'
@@ -91,15 +92,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="line-cta">
-        <div className="wrap line-inner">
-          <div>
-            <h2>{t('毎週月曜、あなたの干支の運勢をLINEでお届け', '매주 월요일, 당신 띠의 운세를 LINE으로 보내드립니다')}</h2>
-            <p>{t('開運日の前日にはお知らせも。友だち追加は無料です。', '개운일 전날에는 알림도 보내드려요. 친구 추가는 무료입니다.')}</p>
-          </div>
-          <a className="btn-line" href="#top">{t('LINEで友だち追加', 'LINE 친구 추가')}</a>
-        </div>
-      </section>
+      <LineBand />
     </>
   )
 }

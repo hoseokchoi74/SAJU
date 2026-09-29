@@ -2,6 +2,7 @@ import { bank } from '../data/bank'
 import { birthYears, fmtDays, texts, ZODIAC } from '../data/content'
 import { Faq, Updated } from '../components/Faq'
 import { Breadcrumb } from '../components/Layout'
+import { LineCard } from '../components/LineFriend'
 import { useT } from '../lib/i18n'
 import { ELEMENT_LUCK, getMonthDays, getZodiacMonthly } from '../lib/koyomi'
 import { hasMonth, pathOf, shiftYM, type YM } from '../routes'
@@ -89,6 +90,8 @@ export function UnseiPage({ ym }: { ym: YM }) {
         {hasMonth(prev) ? <a href={pathOf({ page: 'unsei', ym: prev })}>← {t(`${prev.year}年${prev.month}月`, `${prev.year}년 ${prev.month}월`)}</a> : <span />}
         {hasMonth(next) ? <a href={pathOf({ page: 'unsei', ym: next })}>{t(`${next.year}年${next.month}月`, `${next.year}년 ${next.month}월`)} →</a> : <span />}
       </nav>
+
+      <LineCard context="page" />
 
       <nav className="link-cards">
         <a href={pathOf({ page: 'kichijitsu', year: ym.year })}>{t(`${ym.year}年の吉日カレンダー`, `${ym.year}년 길일 달력`)} →</a>
