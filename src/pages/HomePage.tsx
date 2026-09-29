@@ -1,17 +1,20 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { BirthForm } from '../components/BirthForm'
+import { Faq } from '../components/Faq'
 import { KaiunCalendar } from '../components/KaiunCalendar'
 import { Ranking } from '../components/Ranking'
 import { TodayCard } from '../components/TodayCard'
 import { useT } from '../lib/i18n'
-import { getDayInfo } from '../lib/koyomi'
+import { getDayInfo, type DayInfo } from '../lib/koyomi'
 
-// トップは「今日」で内容が変わるため事前レンダリングせず、クライアントで描画する
+// トップはビルド時に事前レンダリングする(AIクローラーなどJSを実行しない読み手にも本文が届くように)。
+// 「今日」で内容が変わる部分(今日のこよみ・ランキング・開運カレンダー)はマウント後にクライアントで描画する。
 export function HomePage() {
   const { t } = useT()
-  const today = useMemo(() => {
+  const [today, setToday] = useState<DayInfo | null>(null)
+  useEffect(() => {
     const now = new Date()
-    return getDayInfo(now.getFullYear(), now.getMonth() + 1, now.getDate())
+    setToday(getDayInfo(now.getFullYear(), now.getMonth() + 1, now.getDate()))
   }, [])
 
   return (
@@ -36,12 +39,12 @@ export function HomePage() {
             </p>
             <BirthForm />
           </div>
-          <TodayCard info={today} />
+          {today ? <TodayCard info={today} /> : <div className="today-card placeholder" aria-hidden />}
         </div>
       </section>
 
-      <Ranking today={today} />
-      <KaiunCalendar today={today} />
+      {today && <Ranking today={today} />}
+      {today && <KaiunCalendar today={today} />}
 
       <section className="section about" id="about">
         <div className="wrap">
@@ -79,6 +82,12 @@ export function HomePage() {
               </p>
             </li>
           </ol>
+        </div>
+      </section>
+
+      <section className="section faq-section">
+        <div className="wrap">
+          <Faq route={{ page: 'home' }} />
         </div>
       </section>
 

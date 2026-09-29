@@ -1,5 +1,6 @@
 import { bank } from '../data/bank'
 import { birthYears, fmtDays, texts, ZODIAC } from '../data/content'
+import { Faq, Updated } from '../components/Faq'
 import { Breadcrumb } from '../components/Layout'
 import { useT } from '../lib/i18n'
 import { ELEMENT_LUCK, getMonthDays, getZodiacMonthly } from '../lib/koyomi'
@@ -32,6 +33,7 @@ export function UnseiPage({ ym }: { ym: YM }) {
             '. 태어난 해의 띠와 이달 간지의 궁합으로 한 달의 흐름과 개운일을 풀어냅니다.',
           )}
         </p>
+        <Updated />
       </header>
 
       {best.length > 0 && (
@@ -80,6 +82,8 @@ export function UnseiPage({ ym }: { ym: YM }) {
           )
         })}
       </ol>
+
+      <Faq route={{ page: 'unsei', ym }} />
 
       <nav className="pager">
         {hasMonth(prev) ? <a href={pathOf({ page: 'unsei', ym: prev })}>← {t(`${prev.year}年${prev.month}月`, `${prev.year}년 ${prev.month}월`)}</a> : <span />}

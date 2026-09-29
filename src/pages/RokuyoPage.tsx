@@ -1,3 +1,4 @@
+import { Faq, Updated } from '../components/Faq'
 import { Breadcrumb } from '../components/Layout'
 import { texts } from '../data/content'
 import { useT } from '../lib/i18n'
@@ -22,6 +23,7 @@ export function RokuyoPage({ year }: { year: number }) {
             `${year}년의 대안·적구·선승·우인·선부·불멸을 월별 달력으로 만들었습니다. 결혼식, 이사, 계약 등 날짜를 고를 때 참고하세요.`,
           )}
         </p>
+        <Updated />
       </header>
 
       <ul className="stat-chips">
@@ -105,6 +107,8 @@ export function RokuyoPage({ year }: { year: number }) {
           )}
         </p>
       </section>
+
+      <Faq route={{ page: 'rokuyo', year }} />
 
       <nav className="link-cards">
         {YEARS.filter((y) => y !== year).map((y) => (

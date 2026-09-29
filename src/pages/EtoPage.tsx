@@ -1,5 +1,6 @@
 import { bank } from '../data/bank'
 import { birthYears, texts, ZODIAC } from '../data/content'
+import { Faq, Updated } from '../components/Faq'
 import { Breadcrumb } from '../components/Layout'
 import { useT } from '../lib/i18n'
 import { ELEMENT_LUCK, getMonthDays, getZodiacMonthly, type DayInfo } from '../lib/koyomi'
@@ -46,6 +47,7 @@ export function EtoPage({ branch, ym }: { branch: number; ym: YM }) {
             {lang === 'ja' ? `${zd.animal}年` : zd.ko}・{t('総合', '종합')} <span className="stars">{stars(z.stars)}</span>・
             {t(`12支中${z.rank}位`, `12띠 중 ${z.rank}위`)}
           </p>
+          <Updated />
         </div>
       </header>
 
@@ -127,6 +129,8 @@ export function EtoPage({ branch, ym }: { branch: number; ym: YM }) {
           )}
         </p>
       </section>
+
+      <Faq route={{ page: 'eto', branch, ym }} />
 
       <nav className="zodiac-chips" aria-label={t('ほかの干支', '다른 띠')}>
         {ZODIAC.map((o, b) => (

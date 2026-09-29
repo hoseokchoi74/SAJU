@@ -41,7 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <a href={links.unsei}>{t('干支別の運勢', '띠별 운세')}</a>
               <a href={links.kichijitsu}>{t('吉日カレンダー', '길일 달력')}</a>
               <a href={links.rokuyo}>{t('六曜カレンダー', '육요 달력')}</a>
-              <a href="/#about">{t('こよみサジュとは', '코요미 사주란?')}</a>
+              <a href="/about">{t('こよみサジュとは', '코요미 사주란?')}</a>
             </nav>
           </div>
           <p className="disclaimer">

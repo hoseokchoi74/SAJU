@@ -11,7 +11,8 @@
 ## ページ構成(SEO)
 | URL | 内容 | 描画 |
 |---|---|---|
-| `/` | トップ(今日のこよみ・無料鑑定・ランキング) | クライアント(日付で変わるため) |
+| `/` | トップ(今日のこよみ・無料鑑定・ランキング) | 事前レンダリング(今日のこよみ・ランキング・カレンダーはマウント後に描画) |
+| `/about` | 占いの仕組み・計算方法・出典・検証 | 〃 |
 | `/kichijitsu/2026` | 年間の吉日カレンダー | ビルド時に事前レンダリング |
 | `/rokuyo/2026` | 年間の六曜カレンダー | 〃 |
 | `/unsei/2026-10` | 月別の干支ランキング | 〃 |
@@ -20,6 +21,12 @@
 - `src/routes.ts` がページ一覧・タイトル/説明文・範囲(暦ページの年 `YEARS`、月別ページ `FIRST_MONTH`〜`LAST_MONTH`)を持つ。
 - `npm run build` = クライアントビルド → SSRビルド(`src/entry-server.tsx`)→ `scripts/prerender.mjs` で `dist/**.html` と `sitemap.xml` を生成。Vercel の `cleanUrls` で拡張子なしのURLになる。
 - ナビの「今月・今年」はビルド日時で決まるため、毎月1日 09:05(JST)に Vercel Cron が `api/redeploy.js` を呼び、Deploy Hook で自動再デプロイする(Vercel 環境変数 `DEPLOY_HOOK_URL`・`CRON_SECRET` が必要)。範囲を延ばすときは `LAST_MONTH` / `YEARS` を更新(公開済みURLを消さないよう `FIRST_MONTH` は動かさない)。
+
+## AEO / GEO(AI検索・回答エンジン向け)
+- `src/seo.ts` — 各ページの「よくある質問」を暦エンジンの計算結果から生成。同じ文を画面表示と `FAQPage` 構造化データに使う(不一致を防ぐ)。ほかに `WebPage`(dateModified)・`BreadcrumbList`、`index.html` に `WebSite`・`Organization`。
+- `dist/llms.txt`・`dist/llms-full.txt` — AI向けのサイト案内と主要な事実(ビルド時に生成)。
+- `public/robots.txt` — AIクローラー(GPTBot・OAI-SearchBot・ClaudeBot・PerplexityBot など)を明示的に許可。
+- IndexNow — 毎月1日 10:05(JST)に Vercel Cron が `api/indexnow.js` で全URLを通知(Bing 経由で ChatGPT 検索にも反映)。手動: `node scripts/indexnow.mjs`。キーファイルは `public/<キー>.txt`。
 
 ## 開発
 ```bash

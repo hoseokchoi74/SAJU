@@ -1,3 +1,4 @@
+import { Faq, Updated } from '../components/Faq'
 import { Breadcrumb } from '../components/Layout'
 import { texts } from '../data/content'
 import { useT } from '../lib/i18n'
@@ -32,6 +33,7 @@ export function KichijitsuPage({ year }: { year: number }) {
             `${year}년의 일립만배일·천사일·인일·사일·대안을 월별로 정리했습니다. 지갑 새로 장만하기, 혼인신고, 새로운 일을 시작할 날을 고를 때 참고하세요.`,
           )}
         </p>
+        <Updated />
       </header>
 
       <ul className="stat-chips">
@@ -110,6 +112,8 @@ export function KichijitsuPage({ year }: { year: number }) {
           </div>
         </dl>
       </section>
+
+      <Faq route={{ page: 'kichijitsu', year }} />
 
       <nav className="link-cards">
         {YEARS.filter((y) => y !== year).map((y) => (

@@ -5,6 +5,10 @@
     {
       "path": "/api/redeploy",
       "schedule": "5 0 1 * *"
+    },
+    {
+      "path": "/api/indexnow",
+      "schedule": "5 1 1 * *"
     }
   ]
 }

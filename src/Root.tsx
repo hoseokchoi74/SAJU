@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Layout } from './components/Layout'
 import { loadLang, LangProvider, reviewEnabled, saveLang, useT, type Lang } from './lib/i18n'
+import { AboutPage } from './pages/AboutPage'
 import { EtoPage } from './pages/EtoPage'
 import { HomePage } from './pages/HomePage'
 import { KichijitsuPage } from './pages/KichijitsuPage'
@@ -48,6 +49,8 @@ function Page({ route }: { route: Route }) {
   switch (route.page) {
     case 'home':
       return <HomePage />
+    case 'about':
+      return <AboutPage />
     case 'kichijitsu':
       return <KichijitsuPage year={route.year} />
     case 'rokuyo':

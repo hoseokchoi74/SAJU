@@ -1,4 +1,20 @@
+# 検索エンジン・AI検索/アシスタントのクローラーを歓迎します
 User-agent: *
 Allow: /
 
+# AI検索・アシスタント(回答での引用・参照)
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Bingbot
+Allow: /
+
 Sitemap: https://koyomisaju.com/sitemap.xml
+# AI向けのサイト案内: https://koyomisaju.com/llms.txt

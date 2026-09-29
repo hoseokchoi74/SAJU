@@ -47,6 +47,7 @@ export const hasMonth = (ym: YM) => monthList().some((m) => m.year === ym.year &
 
 export type Route =
   | { page: 'home' }
+  | { page: 'about' }
   | { page: 'kichijitsu'; year: number }
   | { page: 'rokuyo'; year: number }
   | { page: 'unsei'; ym: YM }
@@ -57,6 +58,8 @@ export function pathOf(r: Route): string {
   switch (r.page) {
     case 'home':
       return '/'
+    case 'about':
+      return '/about'
     case 'kichijitsu':
       return `/kichijitsu/${r.year}`
     case 'rokuyo':
@@ -73,6 +76,7 @@ export function pathOf(r: Route): string {
 export function resolve(path: string): Route {
   const p = path.replace(/\.html$/, '').replace(/\/+$/, '') || '/'
   if (p === '/') return { page: 'home' }
+  if (p === '/about') return { page: 'about' }
   let m = p.match(/^\/(kichijitsu|rokuyo)\/(\d{4})$/)
   if (m && YEARS.includes(+m[2])) return { page: m[1] as 'kichijitsu' | 'rokuyo', year: +m[2] }
   m = p.match(/^\/unsei\/(\d{4})-(\d{2})$/)
@@ -83,9 +87,9 @@ export function resolve(path: string): Route {
   return { page: 'notfound' }
 }
 
-/** 事前レンダリングするページ(トップは日付で内容が変わるためクライアント描画のまま) */
+/** 事前レンダリングするページ(トップは日付に依存する部分だけクライアントで描画) */
 export function staticRoutes(): Route[] {
-  const out: Route[] = []
+  const out: Route[] = [{ page: 'home' }, { page: 'about' }]
   for (const year of YEARS) out.push({ page: 'kichijitsu', year }, { page: 'rokuyo', year })
   for (const ym of monthList()) {
     out.push({ page: 'unsei', ym })
@@ -129,6 +133,12 @@ export function metaOf(r: Route): Meta {
         canonical,
       }
     }
+    case 'about':
+      return {
+        title: 'こよみサジュとは｜計算方法・暦データの出典｜こよみサジュ',
+        description: 'こよみサジュの占いの仕組み(韓国式四柱推命×六曜・選日)と、国立天文台の暦要項・韓国天文研究院の万歳暦にもとづく暦計算、検証方法をまとめています。',
+        canonical,
+      }
     default:
       return {
         title: 'こよみサジュ｜韓国式四柱推命×六曜の開運ごよみ',
